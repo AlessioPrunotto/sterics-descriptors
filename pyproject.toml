@@ -9,7 +9,7 @@ description = "Sterics descriptors computation tools"
 
 # Author and license
 authors = [
-    { name = "Alessio Prunotto", email = "your@email.com" }
+    { name = "Alessio Prunotto", email = "alessio.prunotto@gmail.com" }
 ]
 license = {text = "MIT"}
 readme = "README.md"
