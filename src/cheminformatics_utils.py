@@ -1,6 +1,7 @@
 import numpy as np
 from typing import List, Dict
 from rdkit import Chem, DataStructs
+from rdkit.Chem import AllChem
 from rdkit.Chem import Descriptors
 
 
@@ -60,10 +61,49 @@ def calculate_tanimoto_similarity(fps: List[Chem.rdchem.Mol]) -> np.ndarray:
 
     Returns:
         np.ndarray: 2D array representing the Tanimoto similarity matrix.
-    """    
+    """
     n = len(fps)
     similarity_matrix = np.zeros((n, n))
     for i in range(n):
         for j in range(n):
             similarity_matrix[i, j] = DataStructs.TanimotoSimilarity(fps[i], fps[j])
     return similarity_matrix
+
+
+def generate_conformers(
+    mol: Chem.Mol, num_conformers: int = 10
+) -> Chem.Mol | None:
+    """Generate 3D conformers for a given molecule.
+
+    Args:
+        mol (Chem.Mol): RDKit molecule for which to generate conformers.
+        num_conformers (int): Number of conformers to generate.
+
+    Returns:
+        Chem.Mol | None: Molecule with generated conformers or None if optimization fails.
+    """
+    mol = Chem.AddHs(mol)
+    AllChem.EmbedMultipleConfs(mol, numConfs=num_conformers)
+    try:
+        AllChem.MMFFOptimizeMoleculeConfs(mol)
+        return mol
+    except ValueError:
+        return None
+
+
+def write_xyz(mol, conf_id, file_path):
+    """Write the 3D coordinates of a molecule's conformer to an XYZ file.
+
+    Args:
+        mol (Chem.Mol): RDKit molecule containing the conformer.
+        conf_id (int): ID of the conformer to write.
+        file_path (str): Path to the output XYZ file.
+    """ 
+    atoms = [atom.GetSymbol() for atom in mol.GetAtoms()]
+    conf = mol.GetConformer(conf_id)
+    n_atoms = mol.GetNumAtoms()
+    with open(file_path, "w") as f:
+        f.write(f"{n_atoms}\n\n")
+        for i in range(n_atoms):
+            pos = conf.GetAtomPosition(i)
+            f.write(f"{atoms[i]} {pos.x:.6f} {pos.y:.6f} {pos.z:.6f}\n")
