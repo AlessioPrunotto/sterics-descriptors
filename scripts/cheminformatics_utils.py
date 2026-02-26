@@ -18,7 +18,7 @@ def process_molecule(
     Returns:
         tuple[bool, str | None]: Tuple indicating if exactly one amine is
         present and its type.
-    """    
+    """
     # Find all matches for each type
     matches = {
         label: len(mol.GetSubstructMatches(patt)) for label, patt in patterns.items()
@@ -46,10 +46,10 @@ def calc_descriptors(smiles_list: List[str]) -> Dict[str, List[float]]:
     """
     mols = [Chem.MolFromSmiles(s) for s in smiles_list]
     return {
-        "logP": [Descriptors.MolLogP(m) for m in mols],  # type: ignore
-        "MW": [Descriptors.MolWt(m) for m in mols],  # type: ignore
-        "HDonors": [Descriptors.NumHDonors(m) for m in mols],  # type: ignore
-        "HAcceptors": [Descriptors.NumHAcceptors(m) for m in mols],  # type: ignore
+        "logP": [Descriptors.MolLogP(m) for m in mols],
+        "MW": [Descriptors.MolWt(m) for m in mols],
+        "HDonors": [Descriptors.NumHDonors(m) for m in mols],
+        "HAcceptors": [Descriptors.NumHAcceptors(m) for m in mols],
     }
 
 
@@ -70,9 +70,7 @@ def calculate_tanimoto_similarity(fps: List[Chem.rdchem.Mol]) -> np.ndarray:
     return similarity_matrix
 
 
-def generate_conformers(
-    mol: Chem.Mol, num_conformers: int = 10
-) -> Chem.Mol | None:
+def generate_conformers(mol: Chem.Mol, num_conformers: int = 10) -> Chem.Mol | None:
     """Generate 3D conformers for a given molecule.
 
     Args:
@@ -80,7 +78,8 @@ def generate_conformers(
         num_conformers (int): Number of conformers to generate.
 
     Returns:
-        Chem.Mol | None: Molecule with generated conformers or None if optimization fails.
+        Chem.Mol | None: Molecule with generated conformers or None if
+          optimization fails.
     """
     mol = Chem.AddHs(mol)
     AllChem.EmbedMultipleConfs(mol, numConfs=num_conformers)
@@ -98,7 +97,7 @@ def write_xyz(mol, conf_id, file_path):
         mol (Chem.Mol): RDKit molecule containing the conformer.
         conf_id (int): ID of the conformer to write.
         file_path (str): Path to the output XYZ file.
-    """ 
+    """
     atoms = [atom.GetSymbol() for atom in mol.GetAtoms()]
     conf = mol.GetConformer(conf_id)
     n_atoms = mol.GetNumAtoms()
