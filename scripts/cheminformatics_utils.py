@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List, Dict
+from typing import List, Dict, Tuple, Union
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
 from rdkit.Chem import Descriptors
@@ -7,7 +7,7 @@ from rdkit.Chem import Descriptors
 
 def process_molecule(
     mol: Chem.Mol, patterns: Dict[str, Chem.Mol]
-) -> tuple[bool, str | None]:
+) -> Tuple[bool, Union[str, None]]:
     """Evaluate if a molecule contains exactly one amine group
     and if so, of which type.
 
@@ -70,7 +70,7 @@ def calculate_tanimoto_similarity(fps: List[Chem.rdchem.Mol]) -> np.ndarray:
     return similarity_matrix
 
 
-def generate_conformers(mol: Chem.Mol, num_conformers: int = 10) -> Chem.Mol | None:
+def generate_conformers(mol: Chem.Mol, num_conformers: int = 10) -> Union[Chem.Mol, None]:
     """Generate 3D conformers for a given molecule.
 
     Args:
@@ -78,7 +78,7 @@ def generate_conformers(mol: Chem.Mol, num_conformers: int = 10) -> Chem.Mol | N
         num_conformers (int): Number of conformers to generate.
 
     Returns:
-        Chem.Mol | None: Molecule with generated conformers or None if
+        Union[Chem.Mol, None]: Molecule with generated conformers or None if
           optimization fails.
     """
     mol = Chem.AddHs(mol)
