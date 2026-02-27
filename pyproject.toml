@@ -15,6 +15,7 @@ dependencies = [
     "requests",
     "seaborn",
     "matplotlib",
+    "tqdm",
     # Add any other dependencies your project needs here
 ]
 
