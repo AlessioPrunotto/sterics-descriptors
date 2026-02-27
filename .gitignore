@@ -4,3 +4,5 @@ __pycache__/
 .env
 *.xyz
 *.sdf
+build/
+sterics_descriptors.egg-info/
